@@ -7,8 +7,8 @@ import dk.sdu.cbse.services.IEntityProcessingService;
 
 public class EnemyControlSystem implements IEntityProcessingService {
 
-    private static final double SPEED = 2;
-    private static final double TURN_CHANCE = 0.02; // 2% chance to change direction each frame
+    private static final double SPEED = 1;
+    private static final double TURN_CHANCE = 0.01; // 2% chance to change direction each frame
 
     @Override
     public void process(GameData gameData, World world) {
@@ -31,15 +31,14 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
     private void handleBoundaries(Entity enemy, GameData gameData) {
         // --- OPTION 1: Stop at edges (comment out to use wrapping instead) ---
-        if (enemy.getX() < 0) enemy.setX(1);
-        if (enemy.getX() > gameData.getDisplayWidth()) enemy.setX(gameData.getDisplayWidth() - 1);
-        if (enemy.getY() < 0) enemy.setY(1);
-        if (enemy.getY() > gameData.getDisplayHeight()) enemy.setY(gameData.getDisplayHeight() - 1);
+        // if (enemy.getX() < 0) enemy.setX(1);//if (enemy.getX() > gameData.getDisplayWidth()) enemy.setX(gameData.getDisplayWidth() - 1);
+        //if (enemy.getY() < 0) enemy.setY(1);
+        //if (enemy.getY() > gameData.getDisplayHeight()) enemy.setY(gameData.getDisplayHeight() - 1);
 
         // --- OPTION 2: Wrap around edges (comment out option 1 and uncomment this) ---
-        // if (enemy.getX() < 0) enemy.setX(gameData.getDisplayWidth());
-        // if (enemy.getX() > gameData.getDisplayWidth()) enemy.setX(0);
-        // if (enemy.getY() < 0) enemy.setY(gameData.getDisplayHeight());
-        // if (enemy.getY() > gameData.getDisplayHeight()) enemy.setY(0);
+         if (enemy.getX() < 0) enemy.setX(gameData.getDisplayWidth());
+         if (enemy.getX() > gameData.getDisplayWidth()) enemy.setX(0);
+         if (enemy.getY() < 0) enemy.setY(gameData.getDisplayHeight());
+         if (enemy.getY() > gameData.getDisplayHeight()) enemy.setY(0);
     }
 }

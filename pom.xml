@@ -175,7 +175,7 @@
   <modules>
     <module>Common</module>
     <module>Player</module>
-    <module>Asteroids</module>
+    <module>Asteroid</module>
     <module>Bullet</module>
     <module>Collision</module>
     <module>Core</module>
