@@ -180,5 +180,7 @@
     <module>Collision</module>
     <module>Core</module>
     <module>Enemy</module>
+    <module>CommonBullet</module>
+    <module>CommonAsteroid</module>
   </modules>
 </project>

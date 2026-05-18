@@ -9,8 +9,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>dk.sdu.cbse.bullet</groupId>
-    <artifactId>Bullet</artifactId>
+    <groupId>dk.sdu.cbse.common.asteroid</groupId>
+    <artifactId>CommonAsteroid</artifactId>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -21,10 +21,9 @@
     <dependencies>
         <dependency>
             <groupId>dk.sdu.cbse</groupId>
-            <artifactId>CommonBullet</artifactId>
+            <artifactId>Common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 
 </project>
