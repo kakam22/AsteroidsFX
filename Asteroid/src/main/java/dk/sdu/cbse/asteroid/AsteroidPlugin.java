@@ -1,13 +1,16 @@
 package dk.sdu.cbse.asteroid;
 
+import dk.sdu.cbse.common.asteroid.Asteroid;
+import dk.sdu.cbse.data.Entity;
 import dk.sdu.cbse.data.GameData;
 import dk.sdu.cbse.data.World;
+import dk.sdu.cbse.services.IEntityProcessingService;
 import dk.sdu.cbse.services.IGamePluginService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AsteroidPlugin implements IGamePluginService {
+public class AsteroidPlugin implements IGamePluginService, IEntityProcessingService {
 
     private final List<String> asteroidIDs = new ArrayList<>();
     private static final int INITIAL_COUNT = 5;
@@ -73,6 +76,35 @@ public class AsteroidPlugin implements IGamePluginService {
             case 3 -> { // right
                 asteroid.setX(gameData.getDisplayWidth());
                 asteroid.setY(Math.random() * gameData.getDisplayHeight());
+            }
+        }
+    }
+
+
+    //asteroid respawner
+    //TODO: this is still not working, need to checkout why.
+    @Override
+    public void process(GameData gameData, World world) {
+
+        boolean hasAsteroids = false;
+
+        for (Entity entity : world.getEntities()) {
+
+            if (entity instanceof Asteroid) {
+                hasAsteroids = true;
+                break;
+            }
+        }
+
+        // Spawn new wave if all asteroids are gone
+        if (!hasAsteroids) {
+
+            for (int i = 0; i < INITIAL_COUNT; i++) {
+
+                Asteroid asteroid =
+                        createAsteroid(gameData, Asteroid.Size.LARGE);
+
+                asteroidIDs.add(world.addEntity(asteroid));
             }
         }
     }

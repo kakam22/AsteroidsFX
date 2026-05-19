@@ -57,6 +57,10 @@ public class Game extends Application {
         stage.setTitle("AsteroidsFX");
         stage.setScene(scene);
         stage.show();
+
+        stage.requestFocus();
+        canvas.requestFocus();
+        canvas.setFocusTraversable(true);
     }
 
     @Override

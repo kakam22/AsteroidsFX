@@ -7,12 +7,23 @@ import dk.sdu.cbse.data.GameKeys;
 import dk.sdu.cbse.data.World;
 import dk.sdu.cbse.services.IEntityProcessingService;
 
+import dk.sdu.cbse.common.bullet.Bullet;
+import dk.sdu.cbse.common.bullet.BulletSPI;
+
+import java.util.Collection;
+import java.util.ServiceLoader;
+import static java.util.stream.Collectors.toList;
+
 public class PlayerControlSystem implements IEntityProcessingService {
 
     private static final double SPEED = 3;
-
+    private static final long SHOOT_COOLDOWN_NS = 300_000_000L; // 0.3 seconds between shots
+    private long lastShotTime = 0;
     @Override
     public void process(GameData gameData, World world) {
+
+        long now = System.nanoTime();
+
         for (Entity player : world.getEntities(Player.class)) {
 
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
@@ -27,9 +38,27 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
             }
+            if (gameData.getKeys().isDown(GameKeys.SPACE) && now - lastShotTime >= SHOOT_COOLDOWN_NS) {
+                getBulletSPIs().stream().findFirst().ifPresent(
+                        spi -> world.addEntity(spi.createBullet(player, gameData, Bullet.Owner.PLAYER))
+                );
+                lastShotTime = now;
+            }
+
+            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
+                Collection<? extends BulletSPI> spis = getBulletSPIs();
+                spis.stream().findFirst().ifPresent(
+                        spi -> {
+                            Entity bullet = spi.createBullet(player, gameData, Bullet.Owner.PLAYER);
+                            world.addEntity(bullet);
+                        }
+                );
+            }
 
             handleBoundaries(player, gameData);
         }
+
+
     }
 
     private void handleBoundaries(Entity player, GameData gameData) {
@@ -44,5 +73,11 @@ public class PlayerControlSystem implements IEntityProcessingService {
         // if (player.getX() > gameData.getDisplayWidth()) player.setX(0);
         // if (player.getY() < 0) player.setY(gameData.getDisplayHeight());
         // if (player.getY() > gameData.getDisplayHeight()) player.setY(0);
+    }
+
+    private Collection<? extends BulletSPI> getBulletSPIs() {
+        return ServiceLoader.load(BulletSPI.class).stream()
+                .map(ServiceLoader.Provider::get)
+                .collect(toList());
     }
 }
