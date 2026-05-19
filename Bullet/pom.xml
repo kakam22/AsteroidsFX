@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>dk.sdu.cbse</groupId>
+            <groupId>dk.sdu.cbse.common.bullet</groupId>
             <artifactId>CommonBullet</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
