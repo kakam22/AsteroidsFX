@@ -1,5 +1,6 @@
 package dk.sdu.cbse.player;
 
+import dk.sdu.cbse.common.player.Player;
 import dk.sdu.cbse.data.Entity;
 import dk.sdu.cbse.data.GameData;
 import dk.sdu.cbse.data.World;
