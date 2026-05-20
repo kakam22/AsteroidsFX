@@ -6,24 +6,38 @@ import dk.sdu.cbse.data.World;
 import dk.sdu.cbse.services.IEntityProcessingService;
 import dk.sdu.cbse.services.IGamePluginService;
 import dk.sdu.cbse.services.IPostEntityProcessingService;
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.ServiceLoader;
+import java.util.Collection;
+import java.util.List;
 
-public class Game extends Application {
+public class Game {
 
-    private final GameData gameData = new GameData();
-    private final World world = new World();
+    private final GameData gameData;
+    private final World world;
+    private final Collection<? extends IGamePluginService> pluginServices;
+    private final List<IEntityProcessingService> entityProcessors;
+    private final List<IPostEntityProcessingService> postProcessors;
     private Canvas canvas;
 
-    @Override
+    public Game(
+            GameData gameData,
+            World world,
+            Collection<? extends IGamePluginService> pluginServices,
+            List<IEntityProcessingService> entityProcessors,
+            List<IPostEntityProcessingService> postProcessors
+    ) {
+        this.gameData = gameData;
+        this.world = world;
+        this.pluginServices = pluginServices;
+        this.entityProcessors = entityProcessors;
+        this.postProcessors = postProcessors;
+    }
+
     public void start(Stage stage) {
         canvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         Pane root = new Pane(canvas);
@@ -46,12 +60,12 @@ public class Game extends Application {
         });
 
         // Start all plugins
-        for (IGamePluginService plugin : ServiceLoader.load(IGamePluginService.class)) {
+        for (IGamePluginService plugin : pluginServices) {
             plugin.start(gameData, world);
         }
 
         // Start game loop
-        GameLoop loop = new GameLoop(gameData, world, canvas);
+        GameLoop loop = new GameLoop(gameData, world, canvas, entityProcessors, postProcessors);
         loop.start();
 
         stage.setTitle("AsteroidsFX");
@@ -63,10 +77,9 @@ public class Game extends Application {
         canvas.setFocusTraversable(true);
     }
 
-    @Override
     public void stop() {
         // Stop all plugins on window close
-        for (IGamePluginService plugin : ServiceLoader.load(IGamePluginService.class)) {
+        for (IGamePluginService plugin : pluginServices) {
             plugin.stop(gameData, world);
         }
     }

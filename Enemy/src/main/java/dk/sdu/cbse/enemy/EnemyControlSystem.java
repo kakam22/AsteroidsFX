@@ -64,7 +64,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
     }
 
     private Collection<? extends BulletSPI> getBulletSPIs() {
-        return ServiceLoader.load(BulletSPI.class).stream()
+        return ServiceLoader.load(EnemyControlSystem.class.getModule().getLayer(), BulletSPI.class).stream()
                 .map(ServiceLoader.Provider::get)
                 .collect(toList());
     }

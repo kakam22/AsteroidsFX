@@ -13,9 +13,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.List;
-import java.util.ServiceLoader;
-
-import static java.util.stream.Collectors.toList;
 
 public class GameLoop extends AnimationTimer {
 
@@ -25,15 +22,18 @@ public class GameLoop extends AnimationTimer {
     private final List<IEntityProcessingService> entityProcessors;
     private final List<IPostEntityProcessingService> postProcessors;
 
-    public GameLoop(GameData gameData, World world, Canvas canvas) {
+    public GameLoop(
+            GameData gameData,
+            World world,
+            Canvas canvas,
+            List<IEntityProcessingService> entityProcessors,
+            List<IPostEntityProcessingService> postProcessors
+    ) {
         this.gameData = gameData;
         this.world = world;
         this.canvas = canvas;
-        // Load once, reuse every frame
-        this.entityProcessors = ServiceLoader.load(IEntityProcessingService.class)
-                .stream().map(ServiceLoader.Provider::get).collect(toList());
-        this.postProcessors = ServiceLoader.load(IPostEntityProcessingService.class)
-                .stream().map(ServiceLoader.Provider::get).collect(toList());
+        this.entityProcessors = entityProcessors;
+        this.postProcessors = postProcessors;
     }
 
     @Override
