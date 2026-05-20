@@ -62,17 +62,12 @@ public class PlayerControlSystem implements IEntityProcessingService {
     }
 
     private void handleBoundaries(Entity player, GameData gameData) {
-        // --- OPTION 1: Stop at edges (comment out to use wrapping instead) ---
-        if (player.getX() < 0) player.setX(1);
-        if (player.getX() > gameData.getDisplayWidth()) player.setX(gameData.getDisplayWidth() - 1);
-        if (player.getY() < 0) player.setY(1);
-        if (player.getY() > gameData.getDisplayHeight()) player.setY(gameData.getDisplayHeight() - 1);
 
-        // --- OPTION 2: Wrap around edges (comment out option 1 and uncomment this) ---
-        // if (player.getX() < 0) player.setX(gameData.getDisplayWidth());
-        // if (player.getX() > gameData.getDisplayWidth()) player.setX(0);
-        // if (player.getY() < 0) player.setY(gameData.getDisplayHeight());
-        // if (player.getY() > gameData.getDisplayHeight()) player.setY(0);
+
+        if (player.getX() < 0) player.setX(gameData.getDisplayWidth());
+        if (player.getX() > gameData.getDisplayWidth()) player.setX(0);
+        if (player.getY() < 0) player.setY(gameData.getDisplayHeight());
+        if (player.getY() > gameData.getDisplayHeight()) player.setY(0);
     }
 
     private Collection<? extends BulletSPI> getBulletSPIs() {

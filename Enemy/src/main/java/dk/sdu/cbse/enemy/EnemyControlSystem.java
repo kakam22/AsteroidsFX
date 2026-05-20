@@ -54,12 +54,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
     }
 
     private void handleBoundaries(Entity enemy, GameData gameData) {
-        // --- OPTION 1: Stop at edges (comment out to use wrapping instead) ---
-        // if (enemy.getX() < 0) enemy.setX(1);//if (enemy.getX() > gameData.getDisplayWidth()) enemy.setX(gameData.getDisplayWidth() - 1);
-        //if (enemy.getY() < 0) enemy.setY(1);
-        //if (enemy.getY() > gameData.getDisplayHeight()) enemy.setY(gameData.getDisplayHeight() - 1);
 
-        // --- OPTION 2: Wrap around edges (comment out option 1 and uncomment this) ---
         if (enemy.getX() < 0) enemy.setX(gameData.getDisplayWidth());
         if (enemy.getX() > gameData.getDisplayWidth()) enemy.setX(0);
         if (enemy.getY() < 0) enemy.setY(gameData.getDisplayHeight());
