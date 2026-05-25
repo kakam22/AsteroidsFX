@@ -12,7 +12,7 @@ import java.util.List;
 public class BulletControlSystem implements IEntityProcessingService {
 
     private static final double SPEED = 5;
-    private static final long LIFETIME_NS = 2_000_000_000L; // 2 seconds in nanoseconds
+    private static final long LIFETIME_NS = 2_000_000_000L; // 2 seconds in nanoseconds, ændre med /3 for flere skud. måske til demo
     private final java.util.Map<String, Long> spawnTimes = new java.util.concurrent.ConcurrentHashMap<>();
 
     @Override
@@ -23,19 +23,16 @@ public class BulletControlSystem implements IEntityProcessingService {
         for (Entity entity : world.getEntities(Bullet.class)) {
             Bullet bullet = (Bullet) entity;
 
-            // Remove if lifetime exceeded
             if (now - bullet.getSpawnTime() > LIFETIME_NS) {
                 toRemove.add(bullet);
                 continue;
             }
 
-            // Move bullet forward
             double changeX = Math.cos(Math.toRadians(bullet.getRotation())) * SPEED;
             double changeY = Math.sin(Math.toRadians(bullet.getRotation())) * SPEED;
             bullet.setX(bullet.getX() + changeX);
             bullet.setY(bullet.getY() + changeY);
 
-            // Wrap around screen
             if (bullet.getX() < 0) bullet.setX(gameData.getDisplayWidth());
             if (bullet.getX() > gameData.getDisplayWidth()) bullet.setX(0);
             if (bullet.getY() < 0) bullet.setY(gameData.getDisplayHeight());

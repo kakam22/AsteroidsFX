@@ -1,6 +1,7 @@
-dk\sdu\cbse\core\AppConfig.class
 dk\sdu\cbse\core\Game.class
 dk\sdu\cbse\core\GameLoop.class
 module-info.class
-dk\sdu\cbse\core\ServiceLocator.class
 dk\sdu\cbse\core\Main.class
+dk\sdu\cbse\core\AppConfig.class
+dk\sdu\cbse\core\ServiceLocator.class
+dk\sdu\cbse\core\ScoreClient.class

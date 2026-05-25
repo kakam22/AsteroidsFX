@@ -19,6 +19,7 @@ public class Game {
 
     private final GameData gameData;
     private final World world;
+    private final ScoreClient scoreClient;
     private final Collection<? extends IGamePluginService> pluginServices;
     private final List<IEntityProcessingService> entityProcessors;
     private final List<IPostEntityProcessingService> postProcessors;
@@ -27,23 +28,25 @@ public class Game {
     public Game(
             GameData gameData,
             World world,
+            ScoreClient scoreClient,
             Collection<? extends IGamePluginService> pluginServices,
             List<IEntityProcessingService> entityProcessors,
             List<IPostEntityProcessingService> postProcessors
     ) {
         this.gameData = gameData;
         this.world = world;
+        this.scoreClient = scoreClient;
         this.pluginServices = pluginServices;
         this.entityProcessors = entityProcessors;
         this.postProcessors = postProcessors;
     }
 
     public void start(Stage stage) {
+        scoreClient.resetScore();
         canvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         Pane root = new Pane(canvas);
         Scene scene = new Scene(root, gameData.getDisplayWidth(), gameData.getDisplayHeight());
 
-        // Key press handling
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT)  gameData.getKeys().setKey(GameKeys.LEFT, true);
             if (e.getCode() == KeyCode.RIGHT) gameData.getKeys().setKey(GameKeys.RIGHT, true);
@@ -59,13 +62,11 @@ public class Game {
             if (e.getCode() == KeyCode.SPACE) gameData.getKeys().setKey(GameKeys.SPACE, false);
         });
 
-        // Start all plugins
         for (IGamePluginService plugin : pluginServices) {
             plugin.start(gameData, world);
         }
 
-        // Start game loop
-        GameLoop loop = new GameLoop(gameData, world, canvas, entityProcessors, postProcessors);
+        GameLoop loop = new GameLoop(gameData, world, canvas, scoreClient, entityProcessors, postProcessors);
         loop.start();
 
         stage.setTitle("AsteroidsFX");
@@ -78,7 +79,6 @@ public class Game {
     }
 
     public void stop() {
-        // Stop all plugins on window close
         for (IGamePluginService plugin : pluginServices) {
             plugin.stop(gameData, world);
         }

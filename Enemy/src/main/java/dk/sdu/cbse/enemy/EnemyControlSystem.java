@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 public class EnemyControlSystem implements IEntityProcessingService {
 
     private static final double SPEED = 1;
-    private static final double TURN_CHANCE = 0.01; // 1% chance to change direction each frame
+    private static final double TURN_CHANCE = 0.01;
     private static final long SHOOT_INTERVAL_NS = 5_000_000_000L / 3 ; // 3 shots per 5 seconds, (change with divide for more sohts)
 
     private final Map<String, Long> lastShotTime = new ConcurrentHashMap<>();
@@ -29,18 +29,15 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
         for (Entity enemy : world.getEntities(Enemy.class)) {
 
-            // Randomly change direction occasionally
             if (Math.random() < TURN_CHANCE) {
                 enemy.setRotation(Math.random() * 180);
             }
 
-            // Move forward in current direction
             double changeX = Math.cos(Math.toRadians(enemy.getRotation())) * SPEED;
             double changeY = Math.sin(Math.toRadians(enemy.getRotation())) * SPEED;
             enemy.setX(enemy.getX() + changeX);
             enemy.setY(enemy.getY() + changeY);
 
-            // Shoot in movement direction every interval
             long lastShot = lastShotTime.getOrDefault(enemy.getID(), 0L);
             if (now - lastShot >= SHOOT_INTERVAL_NS) {
                 getBulletSPIs().stream().findFirst().ifPresent(

@@ -8,12 +8,12 @@ import dk.sdu.cbse.services.IEntityProcessingService;
 
 public class AsteroidControlSystem implements IEntityProcessingService {
 
-    // Speed per size
+
     private static final double LARGE_SPEED  = 0.8;
     private static final double MEDIUM_SPEED = 1.4;
     private static final double SMALL_SPEED  = 2.0;
 
-    // How gradually the asteroid curves (lower = smoother curve)
+
     private static final double TURN_AMOUNT = 0.4;
 
     @Override
@@ -21,7 +21,6 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         for (Entity entity : world.getEntities(Asteroid.class)) {
             Asteroid asteroid = (Asteroid) entity;
 
-            // Gently drift rotation for smooth curved movement
             asteroid.setRotation(asteroid.getRotation() + (Math.random() * TURN_AMOUNT * 2 - TURN_AMOUNT));
 
             double speed = switch (asteroid.getSize()) {

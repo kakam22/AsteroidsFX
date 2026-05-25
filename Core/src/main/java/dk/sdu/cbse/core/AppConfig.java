@@ -40,9 +40,15 @@ public class AppConfig {
     }
 
     @Bean
+    public ScoreClient scoreClient() {
+        return new ScoreClient();
+    }
+
+    @Bean
     public Game game(
             GameData gameData,
             World world,
+            ScoreClient scoreClient,
             List<IGamePluginService> gamePluginServices,
             List<IEntityProcessingService> entityProcessingServices,
             List<IPostEntityProcessingService> postEntityProcessingServices
@@ -50,6 +56,7 @@ public class AppConfig {
         return new Game(
                 gameData,
                 world,
+                scoreClient,
                 gamePluginServices,
                 entityProcessingServices,
                 postEntityProcessingServices

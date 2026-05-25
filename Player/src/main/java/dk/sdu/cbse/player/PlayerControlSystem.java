@@ -17,7 +17,8 @@ import static java.util.stream.Collectors.toList;
 public class PlayerControlSystem implements IEntityProcessingService {
 
     private static final double SPEED = 3;
-    private static final long SHOOT_COOLDOWN_NS = 300_000_000L; // 0.3 seconds between shots
+    private static final long SHOOT_COOLDOWN_NS = 300_000_000L; // 0.3 seconds between shots, doesnt quite work.
+    //TODO: research why it doesnt shoot faster
     private long lastShotTime = 0;
     @Override
     public void process(GameData gameData, World world) {

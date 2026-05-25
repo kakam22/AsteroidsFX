@@ -27,7 +27,6 @@ public class AsteroidPlugin implements IGamePluginService, IEntityProcessingServ
         Asteroid asteroid = new Asteroid();
         asteroid.setSize(size);
 
-        // Size determines shape and radius
         switch (size) {
             case LARGE -> {
                 asteroid.setPolygonCoordinates(
@@ -49,10 +48,8 @@ public class AsteroidPlugin implements IGamePluginService, IEntityProcessingServ
             }
         }
 
-        // Spawn at a random edge of the screen
         spawnAtEdge(asteroid, gameData);
 
-        // Random initial rotation direction
         asteroid.setRotation(Math.random() * 360);
 
         return asteroid;
@@ -96,7 +93,7 @@ public class AsteroidPlugin implements IGamePluginService, IEntityProcessingServ
             }
         }
 
-        // Spawn new wave if all asteroids are gone
+        // Spawn new wave if all asteroids are gone, why not workkk
         if (!hasAsteroids) {
 
             for (int i = 0; i < INITIAL_COUNT; i++) {

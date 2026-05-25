@@ -2,6 +2,8 @@ package dk.sdu.cbse.core;
 
 import dk.sdu.cbse.common.bullet.Bullet;
 import dk.sdu.cbse.common.player.Player;
+import dk.sdu.cbse.common.asteroid.Asteroid;
+import dk.sdu.cbse.common.enemy.Enemy;
 import dk.sdu.cbse.data.Entity;
 import dk.sdu.cbse.data.GameData;
 import dk.sdu.cbse.data.World;
@@ -19,19 +21,25 @@ public class GameLoop extends AnimationTimer {
     private final GameData gameData;
     private final World world;
     private final Canvas canvas;
+    private final ScoreClient scoreClient;
     private final List<IEntityProcessingService> entityProcessors;
     private final List<IPostEntityProcessingService> postProcessors;
+    private int currentScore;
+    private long lastScoreFetch;
+    private boolean scoreServiceOnline;
 
     public GameLoop(
             GameData gameData,
             World world,
             Canvas canvas,
+            ScoreClient scoreClient,
             List<IEntityProcessingService> entityProcessors,
             List<IPostEntityProcessingService> postProcessors
     ) {
         this.gameData = gameData;
         this.world = world;
         this.canvas = canvas;
+        this.scoreClient = scoreClient;
         this.entityProcessors = entityProcessors;
         this.postProcessors = postProcessors;
     }
@@ -62,6 +70,23 @@ public class GameLoop extends AnimationTimer {
             gc.setFont(javafx.scene.text.Font.font(16));
             gc.fillText("Lives: " + player.getLives(), 10, 20);
         }
+
+        updateScore(now);
+        gc.setFill(Color.WHITE);
+        gc.setFont(javafx.scene.text.Font.font(16));
+        gc.fillText(scoreServiceOnline ? "Score: " + currentScore : "Score: offline", 10, 40);
+    }
+
+    private void updateScore(long now) {
+        if (now - lastScoreFetch < 250_000_000L) {
+            return;
+        }
+        Integer score = scoreClient.fetchScore();
+        scoreServiceOnline = score != null;
+        if (score != null) {
+            currentScore = score;
+        }
+        lastScoreFetch = now;
     }
 
     private void drawEntity(GraphicsContext gc, Entity entity) {
@@ -72,7 +97,6 @@ public class GameLoop extends AnimationTimer {
         double sin = Math.sin(Math.toRadians(entity.getRotation()));
 
         if (entity instanceof Bullet) {
-            // Draw as a laser line
             Bullet bullet = (Bullet) entity;
             gc.setStroke(bullet.getOwner() == Bullet.Owner.PLAYER ? Color.GREEN : Color.RED);
             gc.setLineWidth(2);
@@ -84,9 +108,6 @@ public class GameLoop extends AnimationTimer {
             gc.strokeLine(x1, y1, x2, y2);
 
         } else {
-            // Draw as a polygon
-            gc.setStroke(Color.WHITE);
-            gc.setLineWidth(1);
 
             int numPoints = coords.length / 2;
             double[] xPoints = new double[numPoints];
@@ -98,6 +119,18 @@ public class GameLoop extends AnimationTimer {
                 xPoints[i] = entity.getX() + (localX * cos - localY * sin);
                 yPoints[i] = entity.getY() + (localX * sin + localY * cos);
             }
+            if (entity instanceof Asteroid) {
+                gc.setFill(Color.WHITE);
+                gc.fillPolygon(xPoints, yPoints, numPoints);
+                gc.setStroke(Color.WHITE);
+            } else if (entity instanceof Enemy) {
+                gc.setFill(Color.PURPLE);
+                gc.fillPolygon(xPoints, yPoints, numPoints);
+                gc.setStroke(Color.PURPLE.darker());
+            } else {
+                gc.setStroke(Color.WHITE);
+            }
+            gc.setLineWidth(1);
 
             gc.strokePolygon(xPoints, yPoints, numPoints);
         }

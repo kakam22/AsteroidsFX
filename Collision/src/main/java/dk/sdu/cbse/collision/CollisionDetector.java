@@ -15,6 +15,8 @@ import java.util.List;
 
 public class CollisionDetector implements IPostEntityProcessingService {
 
+    private final ScoreServiceClient scoreServiceClient = new ScoreServiceClient();
+
     @Override
     public void process(GameData gameData, World world) {
 
@@ -24,28 +26,28 @@ public class CollisionDetector implements IPostEntityProcessingService {
         for (Entity bullet : world.getEntities(Bullet.class)) {
             Bullet b = (Bullet) bullet;
 
-            // Bullet vs Asteroid
             for (Entity entity : world.getEntities(Asteroid.class)) {
                 Asteroid asteroid = (Asteroid) entity;
                 if (collides(bullet, asteroid)) {
                     toRemove.add(bullet);
                     toRemove.add(asteroid);
-                    // Split asteroid
+                    if (b.getOwner() == Bullet.Owner.PLAYER) {
+                        scoreServiceClient.addScore(pointsForAsteroid(asteroid));
+                    }
                     splitAsteroid(asteroid, gameData, toAdd);
                 }
             }
 
-            // Player bullet vs Enemy
             if (b.getOwner() == Bullet.Owner.PLAYER) {
                 for (Entity entity : world.getEntities(Enemy.class)) {
                     if (collides(bullet, entity)) {
                         toRemove.add(bullet);
                         toRemove.add(entity);
+                        scoreServiceClient.addScore(50);
                     }
                 }
             }
 
-            // Enemy bullet vs Player
             if (b.getOwner() == Bullet.Owner.ENEMY) {
                 for (Entity entity : world.getEntities(Player.class)) {
                     if (collides(bullet, entity)) {
@@ -56,7 +58,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
             }
         }
 
-        // Player vs Asteroid
         for (Entity player : world.getEntities(Player.class)) {
             for (Entity asteroid : world.getEntities(Asteroid.class)) {
                 if (collides(player, asteroid)) {
@@ -67,7 +68,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
             }
         }
 
-        // Enemy vs Asteroid
         for (Entity enemy : world.getEntities(Enemy.class)) {
             for (Entity asteroid : world.getEntities(Asteroid.class)) {
                 if (collides(enemy, asteroid)) {
@@ -82,6 +82,14 @@ public class CollisionDetector implements IPostEntityProcessingService {
         toAdd.forEach(world::addEntity);
     }
 
+    private int pointsForAsteroid(Asteroid asteroid) {
+        return switch (asteroid.getSize()) {
+            case LARGE -> 20;
+            case MEDIUM -> 50;
+            case SMALL -> 100;
+        };
+    }
+
     private void splitAsteroid(Asteroid asteroid, GameData gameData, List<Entity> toAdd) {
         if (asteroid.getSize() == Asteroid.Size.LARGE) {
             toAdd.add(spawnSplit(asteroid, gameData, Asteroid.Size.MEDIUM, 20));
@@ -90,7 +98,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
             toAdd.add(spawnSplit(asteroid, gameData, Asteroid.Size.SMALL, 20));
             toAdd.add(spawnSplit(asteroid, gameData, Asteroid.Size.SMALL, -20));
         }
-        // SMALL asteroids just disappear
     }
 
     private Asteroid spawnSplit(Asteroid parent, GameData gameData, Asteroid.Size size, double rotationOffset) {
@@ -120,7 +127,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
         if (lives <= 0) {
             world.removeEntity(player);
         } else {
-            // Respawn at center
             player.setX(gameData.getDisplayWidth() / 2);
             player.setY(gameData.getDisplayHeight() / 2);
             player.setRotation(0);

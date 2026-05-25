@@ -28,7 +28,7 @@ public class BulletPlugin implements IGamePluginService, BulletSPI {
         bullet.setY(shooter.getY());
         bullet.setRadius(3);
         bullet.setSpawnTime(System.nanoTime());
-        // Different shape/size per owner — drawn differently in Core
+
         bullet.setPolygonCoordinates(0, 0, 8, 0);
         return bullet;
     }
