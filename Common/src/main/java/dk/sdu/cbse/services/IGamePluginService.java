@@ -16,7 +16,7 @@ public interface IGamePluginService {
      * post: Plugin entities have been added to world.
      *
      * @param gameData shared game state
-     * @param world    the game world to add entities to
+     * @param world the game world to add entities to
      */
     void start(GameData gameData, World world);
 
@@ -26,7 +26,7 @@ public interface IGamePluginService {
      * Pre: start() has been called. gameData and world are not null.
      * Post: All plugin entities have been removed from world.
      * @param gameData same as before
-     * @param world    the same but to remove instead
+     * @param world the same but to remove instead
      */
     void stop(GameData gameData, World world);
 }

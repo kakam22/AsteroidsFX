@@ -6,19 +6,25 @@ import dk.sdu.cbse.data.GameData;
 import dk.sdu.cbse.data.World;
 import dk.sdu.cbse.services.IGamePluginService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EnemyPlugin implements IGamePluginService {
-    private Entity enemy;
+    private final List<Entity> enemies = new ArrayList<>();
 
     @Override
     public void start(GameData gameData, World world) {
-        enemy = createEnemyShip(gameData);
-        world.addEntity(enemy);
+    // lav flere enemies, til demo
+        for (int i = 0; i < 3; i++) {
+            Entity enemy = createEnemyShip(gameData);
+            enemies.add(enemy);
+            world.addEntity(enemy);
+        }
     }
 
     private Entity createEnemyShip(GameData gameData) {
         Entity enemyShip = new Enemy();
         enemyShip.setPolygonCoordinates(-5, -5, 10, 0, -5, 5);
-        // Spawn at a random position on the map
         enemyShip.setX(Math.random() * gameData.getDisplayWidth());
         enemyShip.setY(Math.random() * gameData.getDisplayHeight());
         enemyShip.setRotation(Math.random() * 360);
@@ -28,6 +34,9 @@ public class EnemyPlugin implements IGamePluginService {
 
     @Override
     public void stop(GameData gameData, World world) {
-        world.removeEntity(enemy);
+        for (Entity e : enemies) {
+            world.removeEntity(e);
+        }
+        enemies.clear();
     }
 }

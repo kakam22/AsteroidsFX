@@ -27,7 +27,27 @@
         <artifactId>javafx-base</artifactId>
         <version>25.0.1</version>
       </dependency>
-    </dependencies>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>6.1.3</version>
+      </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <version>6.1.3</version>
+       </dependency>
+       <dependency>
+         <groupId>io.micrometer</groupId>
+         <artifactId>micrometer-observation</artifactId>
+         <version>1.12.2</version>
+       </dependency>
+       <dependency>
+         <groupId>io.micrometer</groupId>
+         <artifactId>micrometer-commons</artifactId>
+         <version>1.12.2</version>
+       </dependency>
+     </dependencies>
   </dependencyManagement>
   <build>
     <plugins>
@@ -78,11 +98,74 @@
                   <classifier>win</classifier>
                   <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
                 </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+                <artifactItem>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring-context</artifactId>
+                  <version>6.1.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring-beans</artifactId>
+                  <version>6.1.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring-core</artifactId>
+                  <version>6.1.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring-jcl</artifactId>
+                  <version>6.1.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring-aop</artifactId>
+                  <version>6.1.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.springframework</groupId>
+                  <artifactId>spring-expression</artifactId>
+                  <version>6.1.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                   <groupId>org.springframework</groupId>
+                   <artifactId>spring-web</artifactId>
+                   <version>6.1.3</version>
+                   <type>jar</type>
+                   <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                 </artifactItem>
+                 <artifactItem>
+                   <groupId>io.micrometer</groupId>
+                   <artifactId>micrometer-observation</artifactId>
+                   <version>1.12.2</version>
+                   <type>jar</type>
+                   <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                 </artifactItem>
+                 <artifactItem>
+                   <groupId>io.micrometer</groupId>
+                   <artifactId>micrometer-commons</artifactId>
+                   <version>1.12.2</version>
+                   <type>jar</type>
+                   <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                 </artifactItem>
+               </artifactItems>
+             </configuration>
+           </execution>
+         </executions>
+       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -188,6 +271,8 @@
     <module>Collision</module>
 
     <module>Core</module>
+
+    <module>ScoreService</module>
 
 
   </modules>
