@@ -80,6 +80,7 @@ public class AsteroidPlugin implements IGamePluginService, IEntityProcessingServ
 
     //asteroid respawner
     //TODO: this is still not working, need to checkout why.
+    //aha works :D
     @Override
     public void process(GameData gameData, World world) {
 
@@ -93,7 +94,7 @@ public class AsteroidPlugin implements IGamePluginService, IEntityProcessingServ
             }
         }
 
-        // Spawn new wave if all asteroids are gone, why not workkk
+        // Spawn new wave if all asteroids are gone, wroks now
         if (!hasAsteroids) {
 
             for (int i = 0; i < INITIAL_COUNT; i++) {
