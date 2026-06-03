@@ -79,7 +79,6 @@ public class AsteroidPlugin implements IGamePluginService, IEntityProcessingServ
 
 
     //asteroid respawner
-    //TODO: this is still not working, need to checkout why.
     //aha works :D
     @Override
     public void process(GameData gameData, World world) {
