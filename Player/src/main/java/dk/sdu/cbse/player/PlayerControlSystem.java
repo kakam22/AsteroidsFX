@@ -17,8 +17,7 @@ import static java.util.stream.Collectors.toList;
 public class PlayerControlSystem implements IEntityProcessingService {
 
     private static final double SPEED = 3;
-    private static final long SHOOT_COOLDOWN_NS = 300_000_000L; // 0.3 seconds between shots, doesnt quite work.
-    //TODO: research why it doesnt shoot faster
+    private static final long SHOOT_COOLDOWN_NS = 300_000_000L; // 0.3 seconds between shots
     private long lastShotTime = 0;
     @Override
     public void process(GameData gameData, World world) {
@@ -46,15 +45,6 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 lastShotTime = now;
             }
 
-            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
-                Collection<? extends BulletSPI> spis = getBulletSPIs();
-                spis.stream().findFirst().ifPresent(
-                        spi -> {
-                            Entity bullet = spi.createBullet(player, gameData, Bullet.Owner.PLAYER);
-                            world.addEntity(bullet);
-                        }
-                );
-            }
 
             handleBoundaries(player, gameData);
         }

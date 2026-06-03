@@ -13,7 +13,6 @@ public class BulletControlSystem implements IEntityProcessingService {
 
     private static final double SPEED = 5;
     private static final long LIFETIME_NS = 2_000_000_000L; // 2 seconds in nanoseconds, ændre med /3 for flere skud. måske til demo
-    private final java.util.Map<String, Long> spawnTimes = new java.util.concurrent.ConcurrentHashMap<>();
 
     @Override
     public void process(GameData gameData, World world) {

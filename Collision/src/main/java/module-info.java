@@ -10,5 +10,4 @@ module Collision {
 
     provides dk.sdu.cbse.services.IPostEntityProcessingService
             with dk.sdu.cbse.collision.CollisionDetector;
-    exports dk.sdu.cbse.collision;
 }

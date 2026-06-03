@@ -7,5 +7,4 @@ module Bullet {
             with dk.sdu.cbse.bullet.BulletControlSystem;
     provides dk.sdu.cbse.common.bullet.BulletSPI
             with dk.sdu.cbse.bullet.BulletPlugin;
-    exports dk.sdu.cbse.bullet;
 }
